@@ -30,8 +30,8 @@ class TournamentActivity : AppCompatActivity() {
     private fun fetchTournaments() {
         lifecycleScope.launch {
             try {
-                val response = SupabaseClientManager.fetchTournaments()
-                adapter.updateList(response)
+                val tournaments: List<Tournament> = SupabaseClientManager.getTournaments()
+                adapter.updateList(tournaments)
             } catch (e: Exception) {
                 Toast.makeText(
                     this@TournamentActivity,
