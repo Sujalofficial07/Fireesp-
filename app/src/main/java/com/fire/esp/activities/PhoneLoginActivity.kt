@@ -2,56 +2,76 @@ package com.fire.esp.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.fire.esp.databinding.ActivityPhoneLoginBinding
+import com.fire.esp.databinding.ActivityLoginBinding
 import com.fire.esp.utils.SupabaseClientManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import kotlinx.coroutines.launch
 
-class PhoneLoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityPhoneLoginBinding
+    private lateinit var binding: ActivityLoginBinding
+    private lateinit var googleSignInClient: GoogleSignInClient
+
+    companion object {
+        private const val RC_SIGN_IN = 9001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityPhoneLoginBinding.inflate(layoutInflater)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Send OTP
-        binding.btnSendOTP.setOnClickListener {
-            val phone = binding.etPhone.text.toString()
-            if (phone.isNotEmpty()) sendOTP(phone)
+        setupGoogleSignIn()
+
+        // Google login
+        binding.btnGoogleLogin.setOnClickListener {
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        // Verify OTP
-        binding.btnVerifyOTP.setOnClickListener {
-            val phone = binding.etPhone.text.toString()
-            val code = binding.etOTP.text.toString()
-            if (phone.isNotEmpty() && code.isNotEmpty()) verifyOTP(phone, code)
-        }
-    }
-
-    private fun sendOTP(phone: String) {
-        lifecycleScope.launch {
-            val success = SupabaseClientManager.sendPhoneOTP(phone)
-            Toast.makeText(
-                this@PhoneLoginActivity,
-                if (success) "OTP Sent!" else "Failed to send OTP",
-                Toast.LENGTH_SHORT
-            ).show()
+        // Phone login
+        binding.btnPhoneLogin.setOnClickListener {
+            startActivity(Intent(this, PhoneLoginActivity::class.java))
         }
     }
 
-    private fun verifyOTP(phone: String, code: String) {
-        lifecycleScope.launch {
-            val user = SupabaseClientManager.verifyPhoneOTP(phone, code)
-            if (user != null) {
-                startActivity(Intent(this@PhoneLoginActivity, HomeActivity::class.java))
-                finish()
-            } else {
-                Toast.makeText(this@PhoneLoginActivity, "Invalid OTP", Toast.LENGTH_SHORT).show()
+    private fun setupGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(com.fire.esp.R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                val idToken = account?.idToken
+                if (idToken != null) {
+                    // Call Supabase sign-in with ID token
+                    lifecycleScope.launch {
+                        SupabaseClientManager.signInWithGoogle(idToken) { success ->
+                            if (success) openHome()
+                        }
+                    }
+                }
+            } catch (e: ApiException) {
+                e.printStackTrace()
             }
         }
+    }
+
+    private fun openHome() {
+        startActivity(Intent(this, HomeActivity::class.java))
+        finish()
     }
 }
