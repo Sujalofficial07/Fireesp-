@@ -40,6 +40,17 @@ suspend fun fetchLeaderboard(): List<LeaderboardUser> = withContext(Dispatchers.
             } ?: emptyList()
         } else emptyList()
     }
+   fun signInWithGoogle(idToken: String, onResult: (Boolean, String?) -> Unit) {
+        // Supabase GoTrue Google sign-in example
+        client.auth.signInWithOAuth(
+            provider = io.github.jan.supabase.gotrue.Provider.Google,
+            idToken = idToken
+        ).onSuccess {
+            onResult(true, null)
+        }.onFailure {
+            onResult(false, it.message)
+        }
+   }
 }
 
 // ---------------- Data Models ----------------
