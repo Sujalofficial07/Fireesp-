@@ -4,10 +4,10 @@ data class Tournament(
     val id: String = "",
     val name: String = "",
     val description: String = "",
-    val start_date: String = "",
-    val end_date: String = "",
-    val max_participants: Int = 0,
-    val prize_pool: String = "",
+    val startDate: String = "",
+    val endDate: String = "",
+    val maxParticipants: Int = 0,
+    val prizePool: String = "",
     val status: String = "upcoming",
-    val created_by: String? = null
+    val createdBy: String? = null
 )
