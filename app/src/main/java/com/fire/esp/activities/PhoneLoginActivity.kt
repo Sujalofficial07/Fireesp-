@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.fire.esp.databinding.ActivityPhoneLoginBinding
 import com.fire.esp.utils.SupabaseClientManager
-import com.fire.esp.activities.HomeActivity
 import kotlinx.coroutines.launch
 
 class PhoneLoginActivity : AppCompatActivity() {
@@ -36,11 +35,11 @@ class PhoneLoginActivity : AppCompatActivity() {
     private fun sendOTP(phone: String) {
         lifecycleScope.launch {
             val success = SupabaseClientManager.sendPhoneOTP(phone)
-            if (success) {
-                Toast.makeText(this@PhoneLoginActivity, "OTP Sent!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this@PhoneLoginActivity, "Failed to send OTP", Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(
+                this@PhoneLoginActivity,
+                if (success) "OTP Sent!" else "Failed to send OTP",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
