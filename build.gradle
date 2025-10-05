@@ -5,3 +5,4 @@ buildscript {
     }
 }
 
+// No allprojects { repositories { ... } } block needed anymore
