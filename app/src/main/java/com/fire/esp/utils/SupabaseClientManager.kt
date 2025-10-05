@@ -1,76 +1,45 @@
 package com.fire.esp.utils
 
 import com.fire.esp.data.SupabaseClientProvider
-import io.github.jan.supabase.gotrue.GoTrue
 import io.github.jan.supabase.gotrue.user.UserInfo
-import io.github.jan.supabase.gotrue.sessions.SessionStatus
+import io.github.jan.supabase.postgrest.query.PostgrestResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object SupabaseClientManager {
 
-    private val client = SupabaseClientProvider.client
-    private val auth = client.auth
+    val client = SupabaseClientProvider.client
 
     // -------------------------
     // Authentication
     // -------------------------
 
-    suspend fun signInWithGoogle(): UserInfo? = withContext(Dispatchers.IO) {
-        try {
-            val result = auth.signInWithOAuth(GoTrue.OAuthProvider.Google)
-            result.user
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+    suspend fun signInWithGoogle() = withContext(Dispatchers.IO) {
+        client.gotrue.loginWith(GoTrue.Provider.GOOGLE)
     }
 
-    suspend fun signInWithPhone(phone: String): Boolean = withContext(Dispatchers.IO) {
-        try {
-            auth.signInWithPhone(phone)
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
+    suspend fun signInWithPhone(phone: String) = withContext(Dispatchers.IO) {
+        client.gotrue.signInWith(GoTrue.Phone(phone))
     }
 
     suspend fun verifyPhoneOTP(phone: String, code: String): UserInfo? = withContext(Dispatchers.IO) {
-        try {
-            val session = auth.verifyPhoneOtp(phone, code)
-            session?.user
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+        val session = client.gotrue.verifyPhoneOtp(phone, code)
+        session.user
     }
 
     suspend fun getCurrentUser(): UserInfo? = withContext(Dispatchers.IO) {
-        auth.currentSessionOrNull()?.user
+        client.gotrue.retrieveUserForCurrentSession()
     }
 
-    suspend fun signOut(): Boolean = withContext(Dispatchers.IO) {
-        try {
-            auth.signOut()
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
+    suspend fun signOut() = withContext(Dispatchers.IO) {
+        client.gotrue.logout()
     }
 
     // -------------------------
     // Database helpers
     // -------------------------
 
-    suspend fun <T> fetchTable(table: String): List<T>? = withContext(Dispatchers.IO) {
-        try {
-            val result = client.from(table).select().decodeList<T>()
-            result
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+    suspend fun fetchTable(table: String): PostgrestResult? = withContext(Dispatchers.IO) {
+        client.postgrest[table].select().decodeList()
     }
 }
