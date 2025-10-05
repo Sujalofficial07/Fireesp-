@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
-        gradlePluginPortal() // Required for Kotlin plugin
     }
 }
 
@@ -11,9 +11,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' } // for Supabase
+        maven { url 'https://jitpack.io' } // For supabase
     }
 }
 
-rootProject.name = "Fireesp-"
+rootProject.name = "Fireesp"
 include ':app'
