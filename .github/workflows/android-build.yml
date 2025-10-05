@@ -49,12 +49,10 @@ jobs:
     - name: Build Release APK
       run: ./gradlew assembleRelease
 
-    # 7️⃣ Upload APKs as artifacts
     - name: Upload APKs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: APKs
+        name: ${{ env.sanitized_name }}
         path: |
-          app/build/outputs/apk/debug/*.apk
-          app/build/outputs/apk/release/*.apk
-          
+              app/build/outputs/apk/debug/*.apk
+              app/build/outputs/apk/release/*.apk
