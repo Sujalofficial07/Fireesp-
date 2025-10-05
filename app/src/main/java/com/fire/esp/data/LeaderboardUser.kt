@@ -1,9 +1,27 @@
-package com.fire.esp.data
+package com.fire.esp.utils
 
-data class LeaderboardUser(
-    val id: String = "",
-    val display_name: String = "",
-    val total_wins: Int = 0,
-    val total_points: Int = 0,
-    val kdr: Double = 0.0
-)
+import com.fire.esp.data.LeaderboardUser
+import io.supabase.SupabaseClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+object SupabaseClientManager {
+    private val client = SupabaseClient("YOUR_SUPABASE_URL", "YOUR_SUPABASE_KEY")
+
+    suspend fun fetchLeaderboard(): List<LeaderboardUser> = withContext(Dispatchers.IO) {
+        val response = client.from("leaderboard").select("*").execute()
+        if (response.error == null) {
+            response.data?.map {
+                LeaderboardUser(
+                    id = it["id"] as? String ?: "",
+                    display_name = it["display_name"] as? String ?: "",
+                    total_wins = (it["total_wins"] as? Long)?.toInt() ?: 0,
+                    total_points = (it["total_points"] as? Long)?.toInt() ?: 0,
+                    kdr = it["kdr"] as? Double ?: 0.0
+                )
+            } ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
+}
