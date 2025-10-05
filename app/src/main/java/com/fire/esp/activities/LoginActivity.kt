@@ -58,7 +58,6 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)
                 val idToken = account?.idToken
                 if (idToken != null) {
-                    // Call Supabase sign-in with ID token
                     lifecycleScope.launch {
                         SupabaseClientManager.signInWithGoogle(idToken) { user ->
                             if (user != null) openHome()
