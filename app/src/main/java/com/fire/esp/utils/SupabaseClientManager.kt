@@ -1,30 +1,56 @@
 package com.fire.esp.utils
 
-import io.supabase.supabase.SupabaseClient
-import io.supabase.supabase.gotrue.Gotrue
-import io.supabase.supabase.postgrest.PostgrestClient
+import io.supabase.SupabaseClient
+import io.supabase.gotrue.GoTrueClient
+import io.supabase.postgrest.PostgrestClient
 
 object SupabaseClientManager {
 
-    private const val SUPABASE_URL = "https://rqjsgmxnzqemjztvdomr.supabase.co"
-    private const val SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJxanNnbXhuenFlbWp6dHZkb21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk1NjA1MzUsImV4cCI6MjA3NTEzNjUzNX0.xL5qWoqgwRdsrPTi3CRU-RGt3xfVmMMjwA99t8YyOU0"
-    
+    private const val SUPABASE_URL = "https://YOUR_PROJECT.supabase.co"
+    private const val SUPABASE_KEY = "YOUR_ANON_KEY"
+
+    // Main Supabase client
     val client = SupabaseClient(
         supabaseUrl = SUPABASE_URL,
         supabaseKey = SUPABASE_KEY
     )
 
-    val auth: Gotrue = client.gotrue
+    val auth: GoTrueClient = client.gotrue
+    val postgrest: PostgrestClient = client.postgrest
 
-    suspend fun signInWithGoogle(idToken: String) {
-        // implement Google sign-in logic
+    // Google sign-in (suspend function)
+    suspend fun signInWithGoogle(idToken: String, onResult: (Boolean) -> Unit) {
+        try {
+            val session = auth.signInWithProvider(
+                provider = "google",
+                idToken = idToken
+            )
+            onResult(session != null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onResult(false)
+        }
     }
 
+    // Send phone OTP
     suspend fun sendPhoneOTP(phone: String, onResult: (Boolean) -> Unit) {
-        // implement phone OTP send logic
+        try {
+            val response = auth.signInWithOTP(phone)
+            onResult(response != null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onResult(false)
+        }
     }
 
+    // Verify phone OTP
     suspend fun verifyPhoneOTP(phone: String, code: String, onResult: (Boolean) -> Unit) {
-        // implement OTP verification
+        try {
+            val session = auth.verifyOTP(phone, code)
+            onResult(session != null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onResult(false)
+        }
     }
 }
