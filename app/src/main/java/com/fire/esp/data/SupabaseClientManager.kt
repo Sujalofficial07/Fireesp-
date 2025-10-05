@@ -6,9 +6,11 @@ import com.fire.esp.data.Tournament
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.GoTrue
-import io.github.jan.supabase.gotrue.Provider
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.select
+import io.github.jan.supabase.postgrest.insert
+import io.github.jan.supabase.postgrest.update
+import io.github.jan.supabase.postgrest.delete
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -27,7 +29,75 @@ object SupabaseClientManager {
         }
     }
 
-    // ---------------- Leaderboard ----------------
+    val auth get() = client.gotrue
+
+    // -----------------------------------
+    // Authentication
+    // -----------------------------------
+
+    suspend fun signInWithGoogle(idToken: String) = withContext(Dispatchers.IO) {
+        try {
+            val session = auth.signInWithOAuth("google", idToken = idToken)
+            session.user
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun sendPhoneOTP(phone: String, onResult: (Boolean) -> Unit) = withContext(Dispatchers.IO) {
+        try {
+            auth.signInWithOtp(phone = phone)
+            onResult(true)
+        } catch (e: Exception) {
+            onResult(false)
+        }
+    }
+
+    suspend fun verifyPhoneOTP(phone: String, otp: String, onResult: (Boolean) -> Unit) = withContext(Dispatchers.IO) {
+        try {
+            val session = auth.verifyOtp(phone = phone, token = otp)
+            onResult(session.user != null)
+        } catch (e: Exception) {
+            onResult(false)
+        }
+    }
+
+    fun signOut() = auth.signOut()
+
+    // -----------------------------------
+    // Profiles
+    // -----------------------------------
+
+    suspend fun fetchCurrentProfile(): Profile? = withContext(Dispatchers.IO) {
+        auth.currentUser?.let {
+            Profile(
+                id = it.id,
+                displayName = it.userMetadata["full_name"] as? String ?: "",
+                avatarUrl = it.userMetadata["avatar_url"] as? String,
+                email = it.email
+            )
+        }
+    }
+
+    suspend fun updateProfile(profile: Profile): Boolean = withContext(Dispatchers.IO) {
+        try {
+            client.from("profiles")
+                .update(mapOf(
+                    "display_name" to profile.displayName,
+                    "avatar_url" to profile.avatarUrl
+                ))
+                .eq("id", profile.id)
+                .execute()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    // -----------------------------------
+    // Leaderboard
+    // -----------------------------------
+
     suspend fun fetchLeaderboard(): List<LeaderboardUser> = withContext(Dispatchers.IO) {
         val response = client.from("leaderboard").select("*").execute()
         if (response.error == null) {
@@ -43,28 +113,101 @@ object SupabaseClientManager {
         } else emptyList()
     }
 
-    // ---------------- Google Sign-In ----------------
-    fun signInWithGoogle(idToken: String, onResult: (Boolean, String?) -> Unit) {
-        client.auth.signInWithOAuth(
-            provider = Provider.Google,
-            idToken = idToken
-        ).onSuccess { onResult(true, null) }
-         .onFailure { onResult(false, it.message) }
+    suspend fun addLeaderboardUser(user: LeaderboardUser): Boolean = withContext(Dispatchers.IO) {
+        try {
+            client.from("leaderboard")
+                .insert(
+                    mapOf(
+                        "id" to user.id,
+                        "display_name" to user.displayName,
+                        "total_wins" to user.totalWins,
+                        "total_points" to user.totalPoints,
+                        "kdr" to user.kdr
+                    )
+                )
+                .execute()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    // ---------------- Phone OTP ----------------
-    fun sendPhoneOTP(phoneNumber: String, onResult: (Boolean, String?) -> Unit) {
-        client.auth.signInWithOtp(phone = phoneNumber)
-            .onSuccess { onResult(true, null) }
-            .onFailure { onResult(false, it.message) }
+    // -----------------------------------
+    // Tournaments
+    // -----------------------------------
+
+    suspend fun fetchTournaments(): List<Tournament> = withContext(Dispatchers.IO) {
+        val response = client.from("tournaments").select("*").execute()
+        if (response.error == null) {
+            response.data?.map {
+                Tournament(
+                    id = it["id"] as? String ?: "",
+                    name = it["name"] as? String ?: "",
+                    description = it["description"] as? String ?: "",
+                    startDate = it["start_date"] as? String ?: "",
+                    endDate = it["end_date"] as? String ?: "",
+                    maxParticipants = (it["max_participants"] as? Long)?.toInt() ?: 0,
+                    prizePool = it["prize_pool"] as? String ?: "",
+                    status = it["status"] as? String ?: "upcoming",
+                    createdBy = it["created_by"] as? String
+                )
+            } ?: emptyList()
+        } else emptyList()
     }
 
-    fun verifyPhoneOTP(phoneNumber: String, otp: String, onResult: (Boolean, String?) -> Unit) {
-        client.auth.verifyOtp(phone = phoneNumber, token = otp)
-            .onSuccess { onResult(true, null) }
-            .onFailure { onResult(false, it.message) }
+    suspend fun addTournament(tournament: Tournament): Boolean = withContext(Dispatchers.IO) {
+        try {
+            client.from("tournaments")
+                .insert(
+                    mapOf(
+                        "name" to tournament.name,
+                        "description" to tournament.description,
+                        "start_date" to tournament.startDate,
+                        "end_date" to tournament.endDate,
+                        "max_participants" to tournament.maxParticipants,
+                        "prize_pool" to tournament.prizePool,
+                        "status" to tournament.status,
+                        "created_by" to tournament.createdBy
+                    )
+                )
+                .execute()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    // ---------------- TODO ----------------
-    // Add more Supabase queries (Profile, Tournament CRUD, etc.) as needed
+    suspend fun updateTournament(tournament: Tournament): Boolean = withContext(Dispatchers.IO) {
+        try {
+            client.from("tournaments")
+                .update(
+                    mapOf(
+                        "name" to tournament.name,
+                        "description" to tournament.description,
+                        "start_date" to tournament.startDate,
+                        "end_date" to tournament.endDate,
+                        "max_participants" to tournament.maxParticipants,
+                        "prize_pool" to tournament.prizePool,
+                        "status" to tournament.status
+                    )
+                )
+                .eq("id", tournament.id)
+                .execute()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun deleteTournament(tournamentId: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            client.from("tournaments")
+                .delete()
+                .eq("id", tournamentId)
+                .execute()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
