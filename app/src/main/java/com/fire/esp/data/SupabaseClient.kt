@@ -1,16 +1,22 @@
 package com.fire.esp.data
 
-import io.supabase.SupabaseClient
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.gotrue.GoTrue
+import io.github.jan.supabase.postgrest.Postgrest
 
 object SupabaseClientProvider {
-    // Replace with your Supabase project URL & anon/public key
-    private const val SUPABASE_URL = "https://rqjsgmxnzqemjztvdomr.supabase.co"
-    private const val SUPABASE_KEY = "<YOUR_PUBLISHABLE_KEY>"
+
+    private const val SUPABASE_URL = "https://YOUR-PROJECT-URL.supabase.co"
+    private const val SUPABASE_ANON_KEY = "YOUR-ANON-KEY"
 
     val client: SupabaseClient by lazy {
-        SupabaseClient(
+        createSupabaseClient(
             supabaseUrl = SUPABASE_URL,
-            supabaseKey = SUPABASE_KEY
-        )
+            supabaseKey = SUPABASE_ANON_KEY
+        ) {
+            install(GoTrue)
+            install(Postgrest)
+        }
     }
 }
