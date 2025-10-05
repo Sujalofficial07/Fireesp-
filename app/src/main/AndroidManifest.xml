@@ -4,9 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <!-- Minimum and target SDK -->
-    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="33"/>
-    
+    <!-- Updated minimum and target SDK -->
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="34"/>
+
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -34,13 +34,13 @@
         <!-- Home activity (Bottom Navigation) -->
         <activity android:name=".activities.HomeActivity" android:exported="true"/>
 
-        <!-- Optional standalone activities for Admin, Profile, Tournaments, Leaderboard -->
+        <!-- Optional standalone activities -->
         <activity android:name=".activities.TournamentActivity" android:exported="true"/>
         <activity android:name=".activities.LeaderboardActivity" android:exported="true"/>
         <activity android:name=".activities.ProfileActivity" android:exported="true"/>
         <activity android:name=".activities.AdminActivity" android:exported="true"/>
 
-        <!-- Supabase / Google OAuth callback (if using web redirects) -->
+        <!-- Supabase / Google OAuth callback -->
         <activity
             android:name=".activities.OAuthCallbackActivity"
             android:exported="true">
