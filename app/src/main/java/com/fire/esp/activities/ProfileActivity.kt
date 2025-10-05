@@ -14,10 +14,12 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Fetch current user from Supabase Auth
         val currentUser = SupabaseClientManager.getCurrentUser()
 
         binding.tvEmail.text = currentUser?.email ?: "No Email"
         binding.tvUserId.text = currentUser?.id ?: "No ID"
-        binding.tvDisplayName.text = currentUser?.fullName ?: "Unknown"
+        binding.tvDisplayName.text =
+            currentUser?.userMetadata?.get("full_name")?.toString() ?: "Unknown"
     }
 }
