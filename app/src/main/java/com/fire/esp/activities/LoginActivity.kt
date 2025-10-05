@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.fire.esp.R
 import com.fire.esp.databinding.ActivityLoginBinding
 import com.fire.esp.utils.SupabaseClientManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -58,10 +57,10 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)
                 val idToken = account?.idToken
                 if (idToken != null) {
+                    // Use SupabaseClientManager to sign in
                     lifecycleScope.launch {
-                        SupabaseClientManager.signInWithGoogle(idToken) { user ->
-                            if (user != null) openHome()
-                        }
+                        val user = SupabaseClientManager.signInWithGoogle(idToken)
+                        if (user != null) openHome()
                     }
                 }
             } catch (e: ApiException) {
