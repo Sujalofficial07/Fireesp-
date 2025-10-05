@@ -7,13 +7,15 @@
     android:layout_marginBottom="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/tvName"
         android:text="Player Name"
         android:textColor="@color/aqua"
         android:textSize="18sp"
+        android:textStyle="bold"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
@@ -23,6 +25,7 @@
         android:text="Points: 0"
         android:textColor="@color/textWhite"
         android:layout_marginEnd="16dp"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -30,6 +33,7 @@
         android:id="@+id/tvKdr"
         android:text="K/D: 0.0"
         android:textColor="@color/textWhite"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>
