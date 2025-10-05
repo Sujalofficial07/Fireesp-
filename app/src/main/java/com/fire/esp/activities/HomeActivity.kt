@@ -2,22 +2,40 @@ package com.fire.esp.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.fire.esp.databinding.ActivityProfileBinding
-import com.fire.esp.utils.SupabaseClientManager
+import androidx.fragment.app.Fragment
+import com.fire.esp.R
+import com.fire.esp.databinding.ActivityHomeBinding
+import com.fire.esp.fragments.AdminFragment
+import com.fire.esp.fragments.LeaderboardFragment
+import com.fire.esp.fragments.ProfileFragment
+import com.fire.esp.fragments.TournamentFragment
 
-class ProfileActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityProfileBinding
+    private lateinit var binding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProfileBinding.inflate(layoutInflater)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val currentUser = SupabaseClientManager.getCurrentUser()
+        // Load default fragment
+        openFragment(TournamentFragment())
 
-        binding.tvEmail.text = currentUser?.email ?: "No Email"
-        binding.tvUserId.text = currentUser?.id ?: "No ID"
-        binding.tvDisplayName.text = currentUser?.fullName ?: "Unknown"
+        binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menuTournaments -> openFragment(TournamentFragment())
+                R.id.menuLeaderboard -> openFragment(LeaderboardFragment())
+                R.id.menuProfile -> openFragment(ProfileFragment())
+                R.id.menuAdmin -> openFragment(AdminFragment())
+            }
+            true
+        }
+    }
+
+    private fun openFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.containerHome, fragment)
+            .commit()
     }
 }
