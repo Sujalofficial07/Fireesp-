@@ -2,40 +2,43 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/background"
     android:gravity="center"
+    android:background="@color/background"
+    android:padding="32dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="32dp">
+    android:layout_height="match_parent">
 
-    <!-- App Title -->
-    <TextView
-        android:text="Fire ESP"
-        android:textSize="36sp"
-        android:textColor="@color/aqua"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="48dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/etPhone"
+        android:hint="Enter phone number"
+        android:inputType="phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"/>
 
-    <!-- Google Login Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGoogleLogin"
-        android:text="Login with Google"
+        android:id="@+id/btnSendOTP"
+        android:text="Send OTP"
         android:backgroundTint="@color/aqua"
         android:textColor="@color/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Phone Login Button -->
+    <EditText
+        android:id="@+id/etOTP"
+        android:hint="Enter OTP"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"/>
+
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPhoneLogin"
-        android:text="Login with Phone"
+        android:id="@+id/btnVerifyOTP"
+        android:text="Verify OTP"
         android:backgroundTint="@color/aqua"
         android:textColor="@color/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-</LinearLayout>
+
 </LinearLayout>
