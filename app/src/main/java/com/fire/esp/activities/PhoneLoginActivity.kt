@@ -18,14 +18,12 @@ class PhoneLoginActivity : AppCompatActivity() {
         binding = ActivityPhoneLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Send OTP
         binding.btnSendOTP.setOnClickListener {
             val phone = binding.etPhone.text.toString().trim()
             if (phone.isNotEmpty()) sendOTP(phone)
             else Toast.makeText(this, "Enter phone number", Toast.LENGTH_SHORT).show()
         }
 
-        // Verify OTP
         binding.btnVerifyOTP.setOnClickListener {
             val phone = binding.etPhone.text.toString().trim()
             val code = binding.etOTP.text.toString().trim()
@@ -38,7 +36,7 @@ class PhoneLoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val success = SupabaseClientManager.sendPhoneOTP(phone)
             if (success) {
-                Toast.makeText(this@PhoneLoginActivity, "OTP Sent!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@PhoneLoginActivity, "OTP sent!", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this@PhoneLoginActivity, "Failed to send OTP", Toast.LENGTH_SHORT).show()
             }
