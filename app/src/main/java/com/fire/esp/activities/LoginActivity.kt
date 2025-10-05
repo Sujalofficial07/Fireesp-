@@ -28,11 +28,13 @@ class LoginActivity : AppCompatActivity() {
 
         setupGoogleSignIn()
 
+        // Google login button
         binding.btnGoogleLogin.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
+        // Phone login button
         binding.btnPhoneLogin.setOnClickListener {
             startActivity(Intent(this, PhoneLoginActivity::class.java))
         }
@@ -55,8 +57,8 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)
                 val idToken = account?.idToken
                 if (idToken != null) {
+                    // Call Supabase sign-in with ID token
                     lifecycleScope.launch {
-                        // Sign in to Supabase with Google ID token
                         val user = SupabaseClientManager.signInWithGoogle(idToken)
                         if (user != null) openHome()
                     }
