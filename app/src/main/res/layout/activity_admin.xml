@@ -1,50 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:background="@color/background"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:padding="16dp">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-<LinearLayout
-android:orientation="vertical"
-android:layout_width="match_parent"
-android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-<TextView
-android:text="Admin Panel"
-android:textSize="28sp"
-android:textColor="@color/aqua"
-android:layout_marginBottom="16dp"
-android:textStyle="bold"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvAdminTitle"
+            android:text="Admin Panel"
+            android:textSize="28sp"
+            android:textColor="@color/aqua"
+            android:layout_marginBottom="16dp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-<com.google.android.material.button.MaterialButton
-android:id="@+id/btnAddTournament"
-android:text="Add Tournament"
-android:backgroundTint="@color/aqua"
-android:textColor="@color/background"
-android:layout_marginBottom="12dp"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddTournament"
+            android:text="Add Tournament"
+            app:backgroundTint="@color/aqua"
+            android:textColor="@color/background"
+            android:layout_marginBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-<com.google.android.material.button.MaterialButton
-android:id="@+id/btnEditTournament"
-android:text="Edit Tournament"
-android:backgroundTint="@color/aqua"
-android:textColor="@color/background"
-android:layout_marginBottom="12dp"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditTournament"
+            android:text="Edit Tournament"
+            app:backgroundTint="@color/aqua"
+            android:textColor="@color/background"
+            android:layout_marginBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-<com.google.android.material.button.MaterialButton
-android:id="@+id/btnDeleteTournament"
-android:text="Delete Tournament"
-android:backgroundTint="@color/aqua"
-android:textColor="@color/background"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDeleteTournament"
+            android:text="Delete Tournament"
+            app:backgroundTint="@color/aqua"
+            android:textColor="@color/background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>
