@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.fire.esp.R
 import com.fire.esp.databinding.ActivityLoginBinding
 import com.fire.esp.utils.SupabaseClientManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
