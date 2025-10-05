@@ -1,45 +1,30 @@
 package com.fire.esp.utils
 
-import com.fire.esp.data.SupabaseClientProvider
-import io.github.jan.supabase.gotrue.user.UserInfo
-import io.github.jan.supabase.postgrest.query.PostgrestResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import io.supabase.supabase.SupabaseClient
+import io.supabase.supabase.gotrue.Gotrue
+import io.supabase.supabase.postgrest.PostgrestClient
 
 object SupabaseClientManager {
 
-    val client = SupabaseClientProvider.client
+    private const val SUPABASE_URL = "https://YOUR_PROJECT.supabase.co"
+    private const val SUPABASE_KEY = "YOUR_ANON_KEY"
 
-    // -------------------------
-    // Authentication
-    // -------------------------
+    val client = SupabaseClient(
+        supabaseUrl = SUPABASE_URL,
+        supabaseKey = SUPABASE_KEY
+    )
 
-    suspend fun signInWithGoogle() = withContext(Dispatchers.IO) {
-        client.gotrue.loginWith(GoTrue.Provider.GOOGLE)
+    val auth: Gotrue = client.gotrue
+
+    suspend fun signInWithGoogle(idToken: String) {
+        // implement Google sign-in logic
     }
 
-    suspend fun signInWithPhone(phone: String) = withContext(Dispatchers.IO) {
-        client.gotrue.signInWith(GoTrue.Phone(phone))
+    suspend fun sendPhoneOTP(phone: String, onResult: (Boolean) -> Unit) {
+        // implement phone OTP send logic
     }
 
-    suspend fun verifyPhoneOTP(phone: String, code: String): UserInfo? = withContext(Dispatchers.IO) {
-        val session = client.gotrue.verifyPhoneOtp(phone, code)
-        session.user
-    }
-
-    suspend fun getCurrentUser(): UserInfo? = withContext(Dispatchers.IO) {
-        client.gotrue.retrieveUserForCurrentSession()
-    }
-
-    suspend fun signOut() = withContext(Dispatchers.IO) {
-        client.gotrue.logout()
-    }
-
-    // -------------------------
-    // Database helpers
-    // -------------------------
-
-    suspend fun fetchTable(table: String): PostgrestResult? = withContext(Dispatchers.IO) {
-        client.postgrest[table].select().decodeList()
+    suspend fun verifyPhoneOTP(phone: String, code: String, onResult: (Boolean) -> Unit) {
+        // implement OTP verification
     }
 }
