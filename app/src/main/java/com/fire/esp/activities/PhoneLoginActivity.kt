@@ -2,76 +2,58 @@ package com.fire.esp.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.fire.esp.databinding.ActivityLoginBinding
+import com.fire.esp.databinding.ActivityPhoneLoginBinding
 import com.fire.esp.utils.SupabaseClientManager
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
+class PhoneLoginActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLoginBinding
-    private lateinit var googleSignInClient: GoogleSignInClient
-
-    companion object {
-        private const val RC_SIGN_IN = 9001
-    }
+    private lateinit var binding: ActivityPhoneLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityPhoneLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupGoogleSignIn()
-
-        // Google login
-        binding.btnGoogleLogin.setOnClickListener {
-            val signInIntent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
+        // Send OTP
+        binding.btnSendOTP.setOnClickListener {
+            val phone = binding.etPhone.text.toString().trim()
+            if (phone.isNotEmpty()) sendOTP(phone)
+            else Toast.makeText(this, "Enter phone number", Toast.LENGTH_SHORT).show()
         }
 
-        // Phone login
-        binding.btnPhoneLogin.setOnClickListener {
-            startActivity(Intent(this, PhoneLoginActivity::class.java))
+        // Verify OTP
+        binding.btnVerifyOTP.setOnClickListener {
+            val phone = binding.etPhone.text.toString().trim()
+            val code = binding.etOTP.text.toString().trim()
+            if (phone.isNotEmpty() && code.isNotEmpty()) verifyOTP(phone, code)
+            else Toast.makeText(this, "Enter phone and OTP", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun setupGoogleSignIn() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(com.fire.esp.R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                val idToken = account?.idToken
-                if (idToken != null) {
-                    // Call Supabase sign-in with ID token
-                    lifecycleScope.launch {
-                        SupabaseClientManager.signInWithGoogle(idToken) { success ->
-                            if (success) openHome()
-                        }
-                    }
-                }
-            } catch (e: ApiException) {
-                e.printStackTrace()
+    private fun sendOTP(phone: String) {
+        lifecycleScope.launch {
+            val success = SupabaseClientManager.sendPhoneOTP(phone)
+            if (success) {
+                Toast.makeText(this@PhoneLoginActivity, "OTP Sent!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@PhoneLoginActivity, "Failed to send OTP", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun openHome() {
-        startActivity(Intent(this, HomeActivity::class.java))
-        finish()
+    private fun verifyOTP(phone: String, code: String) {
+        lifecycleScope.launch {
+            val user = SupabaseClientManager.verifyPhoneOTP(phone, code)
+            if (user != null) {
+                startActivity(Intent(this@PhoneLoginActivity, HomeActivity::class.java))
+                finish()
+            } else {
+                Toast.makeText(this@PhoneLoginActivity, "Invalid OTP", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
