@@ -30,33 +30,14 @@ class TournamentActivity : AppCompatActivity() {
     private fun fetchTournaments() {
         lifecycleScope.launch {
             try {
-                val response = SupabaseClientManager.client
-                    .from("tournaments") // Table name in Supabase
-                    .select("*")
-                    .execute()
-
-                if (response.error != null) {
-                    Toast.makeText(this@TournamentActivity, "Error: ${response.error.message}", Toast.LENGTH_SHORT).show()
-                    return@launch
-                }
-
-                val tournaments = response.data?.let { dataList ->
-                    dataList.mapNotNull { map ->
-                        val mapData = map as? Map<String, Any>
-                        mapData?.let {
-                            Tournament(
-                                id = it["id"].toString(),
-                                name = it["name"].toString(),
-                                date = it["date"].toString()
-                            )
-                        }
-                    }
-                } ?: emptyList()
-
-                adapter.updateList(tournaments)
-
+                val response = SupabaseClientManager.fetchTournaments()
+                adapter.updateList(response)
             } catch (e: Exception) {
-                Toast.makeText(this@TournamentActivity, "Failed to fetch tournaments: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@TournamentActivity,
+                    "Failed to fetch tournaments: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
