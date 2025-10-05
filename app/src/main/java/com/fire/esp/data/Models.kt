@@ -26,6 +26,20 @@ object SupabaseClientProvider {
             install(Postgrest)
         }
     }
+suspend fun fetchLeaderboard(): List<LeaderboardUser> = withContext(Dispatchers.IO) {
+        val response = client.from("leaderboard").select("*").execute()
+        if (response.error == null) {
+            response.data?.map {
+                LeaderboardUser(
+                    id = it["id"] as? String ?: "",
+                    displayName = it["display_name"] as? String ?: "",
+                    totalWins = (it["total_wins"] as? Long)?.toInt() ?: 0,
+                    totalPoints = (it["total_points"] as? Long)?.toInt() ?: 0,
+                    kdr = it["kdr"] as? Double ?: 0.0
+                )
+            } ?: emptyList()
+        } else emptyList()
+    }
 }
 
 // ---------------- Data Models ----------------
