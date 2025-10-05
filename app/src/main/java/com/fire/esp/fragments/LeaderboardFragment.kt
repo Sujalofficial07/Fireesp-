@@ -8,25 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fire.esp.adapters.LeaderboardAdapter
 import com.fire.esp.data.LeaderboardUser
+import com.fire.esp.data.SupabaseClientManager
 import com.fire.esp.databinding.ActivityLeaderboardBinding
-import io.supabase.SupabaseClient
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 class LeaderboardFragment : Fragment() {
+
     private lateinit var binding: ActivityLeaderboardBinding
     private lateinit var adapter: LeaderboardAdapter
     private val scope = MainScope()
-    private lateinit var supabase: SupabaseClient
     private var users = mutableListOf<LeaderboardUser>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = ActivityLeaderboardBinding.inflate(inflater, container, false)
-
-        supabase = SupabaseClient(
-            supabaseUrl = "YOUR_SUPABASE_URL",
-            supabaseKey = "YOUR_SUPABASE_ANON_KEY"
-        )
 
         adapter = LeaderboardAdapter(users)
         binding.recyclerLeaderboard.layoutManager = LinearLayoutManager(context)
@@ -38,12 +37,10 @@ class LeaderboardFragment : Fragment() {
 
     private fun loadLeaderboard() {
         scope.launch {
-            val response = supabase.from("profiles").select("*").order("total_points", false).execute()
-            if(response.data != null){
-                users.clear()
-                users.addAll(response.data as List<LeaderboardUser>)
-                adapter.notifyDataSetChanged()
-            }
+            val fetchedUsers = SupabaseClientManager.getLeaderboardUsers()
+            users.clear()
+            users.addAll(fetchedUsers)
+            adapter.notifyDataSetChanged()
         }
     }
 }
