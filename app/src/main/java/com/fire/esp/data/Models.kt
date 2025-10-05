@@ -18,11 +18,14 @@ data class Tournament(
     val endDate: String = "",
     val maxParticipants: Int = 0,
     val prizePool: String = "",
-    val status: String = ""
+    val status: String = "upcoming",
+    val createdBy: String? = null
 )
 
 data class LeaderboardUser(
+    val id: String = "",
     val displayName: String = "",
+    val totalWins: Int = 0,
     val totalPoints: Int = 0,
     val kdr: Double = 0.0
 )
