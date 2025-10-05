@@ -18,19 +18,17 @@ class PhoneLoginActivity : AppCompatActivity() {
         binding = ActivityPhoneLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Send OTP button
+        // Send OTP
         binding.btnSendOTP.setOnClickListener {
             val phone = binding.etPhone.text.toString()
             if (phone.isNotEmpty()) sendOTP(phone)
-            else Toast.makeText(this, "Enter phone number", Toast.LENGTH_SHORT).show()
         }
 
-        // Verify OTP button
+        // Verify OTP
         binding.btnVerifyOTP.setOnClickListener {
             val phone = binding.etPhone.text.toString()
             val code = binding.etOTP.text.toString()
             if (phone.isNotEmpty() && code.isNotEmpty()) verifyOTP(phone, code)
-            else Toast.makeText(this, "Enter phone and OTP", Toast.LENGTH_SHORT).show()
         }
     }
 
