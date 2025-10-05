@@ -28,16 +28,9 @@ class LeaderboardActivity : AppCompatActivity() {
     }
 
     private fun fetchLeaderboard() {
-        // Launch a coroutine on the Main thread
         CoroutineScope(Dispatchers.Main).launch {
-            // TODO: Replace with your Supabase fetching logic
-            val users: List<LeaderboardUser> = fetchUsersFromSupabase()
+            val users: List<LeaderboardUser> = SupabaseClientManager.fetchLeaderboard()
             adapter.updateList(users)
         }
-    }
-
-    private suspend fun fetchUsersFromSupabase(): List<LeaderboardUser> {
-        // Placeholder: Replace with actual Supabase call
-        return emptyList()
     }
 }
