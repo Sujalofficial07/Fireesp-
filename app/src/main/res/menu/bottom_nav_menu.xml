@@ -3,21 +3,21 @@
 
     <item
         android:id="@+id/menuTournaments"
-        android:icon="@drawable/ic_tournaments"
+        android:icon="@android:drawable/ic_menu_agenda"
         android:title="Tournaments"/>
 
     <item
         android:id="@+id/menuLeaderboard"
-        android:icon="@drawable/ic_leaderboard"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="Leaderboard"/>
 
     <item
         android:id="@+id/menuProfile"
-        android:icon="@drawable/ic_profile"
+        android:icon="@android:drawable/ic_menu_myplaces"
         android:title="Profile"/>
 
     <item
         android:id="@+id/menuAdmin"
-        android:icon="@drawable/ic_admin"
+        android:icon="@android:drawable/ic_menu_manage"
         android:title="Admin"/>
 </menu>
