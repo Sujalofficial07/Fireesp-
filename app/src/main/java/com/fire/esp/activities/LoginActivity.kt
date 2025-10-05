@@ -28,13 +28,13 @@ class LoginActivity : AppCompatActivity() {
 
         setupGoogleSignIn()
 
-        // Google login button
+        // Google login
         binding.btnGoogleLogin.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        // Phone login button
+        // Phone login
         binding.btnPhoneLogin.setOnClickListener {
             startActivity(Intent(this, PhoneLoginActivity::class.java))
         }
@@ -50,14 +50,12 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
                 val idToken = account?.idToken
                 if (idToken != null) {
-                    // Call Supabase sign-in with ID token
                     lifecycleScope.launch {
                         val user = SupabaseClientManager.signInWithGoogle(idToken)
                         if (user != null) openHome()
