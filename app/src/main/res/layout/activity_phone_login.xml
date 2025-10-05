@@ -1,42 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical"
-android:gravity="center"
-android:background="@color/background"
-android:padding="32dp"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/background"
+    android:padding="32dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-<EditText
-android:id="@+id/etPhone"
-android:hint="Enter phone number"
-android:inputType="phone"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_marginBottom="16dp"/>
+    <!-- Phone Number Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Enter phone number">
 
-<com.google.android.material.button.MaterialButton
-android:id="@+id/btnSendOTP"
-android:text="Send OTP"
-android:backgroundTint="@color/aqua"
-android:textColor="@color/background"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_marginBottom="16dp"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPhone"
+            android:inputType="phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-<EditText
-android:id="@+id/etOTP"
-android:hint="Enter OTP"
-android:inputType="number"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_marginBottom="16dp"/>
+    <!-- Send OTP Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSendOTP"
+        android:text="Send OTP"
+        android:backgroundTint="@color/aqua"
+        android:textColor="@color/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"/>
 
-<com.google.android.material.button.MaterialButton
-android:id="@+id/btnVerifyOTP"
-android:text="Verify OTP"
-android:backgroundTint="@color/aqua"
-android:textColor="@color/background"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"/>
+    <!-- OTP Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Enter OTP">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etOTP"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Verify OTP Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnVerifyOTP"
+        android:text="Verify OTP"
+        android:backgroundTint="@color/aqua"
+        android:textColor="@color/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
