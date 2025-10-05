@@ -6,6 +6,7 @@ import com.fire.esp.data.Tournament
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.GoTrue
+import io.github.jan.supabase.gotrue.Provider
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.select
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,7 @@ object SupabaseClientManager {
         }
     }
 
-    // Fetch leaderboard users
+    // ---------------- Leaderboard ----------------
     suspend fun fetchLeaderboard(): List<LeaderboardUser> = withContext(Dispatchers.IO) {
         val response = client.from("leaderboard").select("*").execute()
         if (response.error == null) {
@@ -42,5 +43,28 @@ object SupabaseClientManager {
         } else emptyList()
     }
 
-    // TODO: Add your Google sign-in, phone OTP, and other auth functions here
+    // ---------------- Google Sign-In ----------------
+    fun signInWithGoogle(idToken: String, onResult: (Boolean, String?) -> Unit) {
+        client.auth.signInWithOAuth(
+            provider = Provider.Google,
+            idToken = idToken
+        ).onSuccess { onResult(true, null) }
+         .onFailure { onResult(false, it.message) }
+    }
+
+    // ---------------- Phone OTP ----------------
+    fun sendPhoneOTP(phoneNumber: String, onResult: (Boolean, String?) -> Unit) {
+        client.auth.signInWithOtp(phone = phoneNumber)
+            .onSuccess { onResult(true, null) }
+            .onFailure { onResult(false, it.message) }
+    }
+
+    fun verifyPhoneOTP(phoneNumber: String, otp: String, onResult: (Boolean, String?) -> Unit) {
+        client.auth.verifyOtp(phone = phoneNumber, token = otp)
+            .onSuccess { onResult(true, null) }
+            .onFailure { onResult(false, it.message) }
+    }
+
+    // ---------------- TODO ----------------
+    // Add more Supabase queries (Profile, Tournament CRUD, etc.) as needed
 }
