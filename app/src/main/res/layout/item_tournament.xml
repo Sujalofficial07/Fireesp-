@@ -9,7 +9,7 @@
     android:layout_height="wrap_content"
     android:elevation="4dp"
     android:clipToOutline="true"
-    android:backgroundTint="@color/purpleDark">
+    android:gravity="start">
 
     <TextView
         android:id="@+id/tvName"
@@ -24,6 +24,7 @@
         android:id="@+id/tvStatus"
         android:text="Status: Upcoming"
         android:textColor="@color/textWhite"
+        android:textSize="16sp"
         android:layout_marginTop="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -31,9 +32,10 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnJoinTournament"
         android:text="Join"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:backgroundTint="@color/aqua"
         android:textColor="@color/background"
+        android:cornerRadius="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>
