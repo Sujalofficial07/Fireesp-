@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:gravity="center"
+android:background="@color/background"
+android:padding="32dp"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<EditText
+android:id="@+id/etPhone"
+android:hint="Enter phone number"
+android:inputType="phone"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginBottom="16dp"/>
+
+<com.google.android.material.button.MaterialButton
+android:id="@+id/btnSendOTP"
+android:text="Send OTP"
+android:backgroundTint="@color/aqua"
+android:textColor="@color/background"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginBottom="16dp"/>
+
+<EditText
+android:id="@+id/etOTP"
+android:hint="Enter OTP"
+android:inputType="number"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginBottom="16dp"/>
+
+<com.google.android.material.button.MaterialButton
+android:id="@+id/btnVerifyOTP"
+android:text="Verify OTP"
+android:backgroundTint="@color/aqua"
+android:textColor="@color/background"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"/>
+</LinearLayout>

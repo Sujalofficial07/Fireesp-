@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- Fire ESP colors -->
+<color name="background">#0a0a0f</color>       <!-- Black background -->
+<color name="darkPurple">#1a0b2e</color>       <!-- Dark purple -->
+<color name="purpleAccent">#7b2cbf</color>     <!-- Purple accent -->
+<color name="purpleLight">#9d4edd</color>      <!-- Light purple -->
+<color name="aqua">#00f5ff</color>            <!-- Glowing aqua buttons -->
+<color name="white">#FFFFFF</color>            <!-- White text -->
+<color name="black">#000000</color>
+<color name="textWhite">#FFFFFF</color>        <!-- Text white -->
+<color name="purpleDark">#1a0b2e</color>       <!-- Replace previous purpleDark -->
+</resources>

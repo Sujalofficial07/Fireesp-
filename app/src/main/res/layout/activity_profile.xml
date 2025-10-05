@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:background="@color/background"
+android:gravity="center_horizontal"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:padding="32dp">
+
+<ImageView
+android:id="@+id/imgAvatar"
+android:src="@mipmap/ic_launcher_round"
+android:layout_width="120dp"
+android:layout_height="120dp"
+android:layout_marginBottom="24dp"/>
+
+<TextView
+android:id="@+id/tvDisplayName"
+android:text="Player Name"
+android:textColor="@color/aqua"
+android:textSize="24sp"
+android:layout_marginBottom="12dp"
+android:textStyle="bold"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+
+<TextView
+android:id="@+id/tvWins"
+android:text="Wins: 0"
+android:textColor="@color/textWhite"
+android:layout_marginBottom="8dp"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+
+<TextView
+android:id="@+id/tvPoints"
+android:text="Points: 0"
+android:textColor="@color/textWhite"
+android:layout_marginBottom="8dp"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+
+<TextView
+android:id="@+id/tvKdr"
+android:text="K/D: 0.0"
+android:textColor="@color/textWhite"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"/>
+</LinearLayout>
