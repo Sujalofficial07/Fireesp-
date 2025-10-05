@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fire.esp.adapters.LeaderboardAdapter
 import com.fire.esp.data.LeaderboardUser
 import com.fire.esp.databinding.ActivityLeaderboardBinding
+import com.fire.esp.utils.SupabaseClientManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ class LeaderboardActivity : AppCompatActivity() {
 
     private fun fetchLeaderboard() {
         CoroutineScope(Dispatchers.Main).launch {
-            val users: List<LeaderboardUser> = SupabaseClientManager.fetchLeaderboard()
+            val users: List<LeaderboardUser> = SupabaseClientManager.getLeaderboardUsers()
             adapter.updateList(users)
         }
     }
