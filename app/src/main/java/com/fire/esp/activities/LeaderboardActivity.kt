@@ -2,28 +2,42 @@ package com.fire.esp.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import com.fire.esp.R
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.fire.esp.adapters.LeaderboardAdapter
 import com.fire.esp.data.LeaderboardUser
+import com.fire.esp.databinding.ActivityLeaderboardBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LeaderboardActivity : AppCompatActivity() {
-    private lateinit var recyclerView: RecyclerView
+
+    private lateinit var binding: ActivityLeaderboardBinding
     private lateinit var adapter: LeaderboardAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_leaderboard)
+        binding = ActivityLeaderboardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        recyclerView = findViewById(R.id.recyclerLeaderboard)
         adapter = LeaderboardAdapter(emptyList())
-        recyclerView.adapter = adapter
+        binding.recyclerLeaderboard.layoutManager = LinearLayoutManager(this)
+        binding.recyclerLeaderboard.adapter = adapter
 
         fetchLeaderboard()
     }
 
     private fun fetchLeaderboard() {
-        // Fetch leaderboard from Supabase
-        // adapter.updateList(users)
+        // Launch a coroutine on the Main thread
+        CoroutineScope(Dispatchers.Main).launch {
+            // TODO: Replace with your Supabase fetching logic
+            val users: List<LeaderboardUser> = fetchUsersFromSupabase()
+            adapter.updateList(users)
+        }
+    }
+
+    private suspend fun fetchUsersFromSupabase(): List<LeaderboardUser> {
+        // Placeholder: Replace with actual Supabase call
+        return emptyList()
     }
 }
