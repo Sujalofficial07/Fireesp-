@@ -1,42 +1,24 @@
 package com.fire.esp.activities
 
 import android.os.Bundle
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.fire.esp.R
+import com.fire.esp.databinding.ActivityProfileBinding
 import com.fire.esp.utils.SupabaseClientManager
-import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity() {
 
-    private lateinit var tvEmail: TextView
-    private lateinit var tvUserId: TextView
+    private lateinit var binding: ActivityProfileBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
+        binding = ActivityProfileBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        tvEmail = findViewById(R.id.tvEmail)
-        tvUserId = findViewById(R.id.tvUserId)
+        // Fetch current user from Supabase
+        val currentUser = SupabaseClientManager.auth.currentUser
 
-        fetchUserProfile()
-    }
-
-    private fun fetchUserProfile() {
-        lifecycleScope.launch {
-            try {
-                val user = SupabaseClientManager.client.auth.currentUser
-                if (user != null) {
-                    tvEmail.text = user.email ?: "No email"
-                    tvUserId.text = user.id
-                } else {
-                    Toast.makeText(this@ProfileActivity, "User not logged in", Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@ProfileActivity, "Failed to fetch profile: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
+        binding.tvEmail.text = currentUser?.email ?: "No Email"
+        binding.tvUserId.text = currentUser?.id ?: "No ID"
+        binding.tvDisplayName.text = currentUser?.userMetadata?.get("full_name") as? String ?: "Unknown"
     }
 }
